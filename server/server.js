@@ -13,7 +13,7 @@ dotenv.config();
 app.get('/', (req, res) => {
   res.send("API working");
 });
-app.post('/webhooks',clerkwebhooks)
+app.post("/api/webhooks", express.text({ type: "*/*" }), clerkwebhooks);
 
 //database connection status
 
