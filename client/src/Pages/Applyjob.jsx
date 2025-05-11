@@ -29,7 +29,7 @@ const Applyjob = () => {
     }
   };
  const applyhandler = async (jobId) => {
-  console.log(jobs)
+  
   console.log(userData)
   try {
    
