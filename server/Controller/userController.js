@@ -1,7 +1,7 @@
 
 import JobApplication from "../models/jobApplication.js"
 import User from "../models/User.js"
-import Job from "../models/Job.js"
+import Job from "../models/job.js"
 import {v2 as cloudinary} from "cloudinary"
 import mongoose from 'mongoose';
 //get user data
