@@ -29,7 +29,7 @@ const Recruiterlogin = () => {
             const {data}=await axios.post('http://localhost:5000/api/company/login',{email,password})
             if( data.success){
               navigate('/Dashboard')
-               console.log(data);
+               
                localStorage.setItem('companyToken',data.token)
                setCompanyData(data.company);
                setCompanyToken(data.token);
@@ -54,15 +54,15 @@ const Recruiterlogin = () => {
               const {data}=await axios.post('http://localhost:5000/api/company/register',formData)
               if(data.success){
                 navigate('/Dashboard')
-                console.log(data);
-                console.log(data);
+                
+                
                localStorage.setItem('companyToken',data.token)
                setCompanyData(data.company);
                setCompanyToken(data.token);
                setShowrecruiterlogin(false);
 
               }else{
-                console.log(data.message);
+                
                 toast.error(data.message);
               }
            }
