@@ -8,7 +8,7 @@ import JobApplication from "../models/jobApplication.js";
 // Register a new company
 export const registerCompany = async (req, res) => {
   const {name, email, password} = req.body
-  const imageFile = req.file;
+  const imageFile = req.file.buffer;
   if (!name || !email || !password || !imageFile) {
 
     return res.json({ success: false, message: "Missing Details" })
