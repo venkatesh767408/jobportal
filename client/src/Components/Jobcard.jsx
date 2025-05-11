@@ -8,7 +8,7 @@ const Jobcard = ({job}) => {
     <div className='border p-6 shadow-lg rounded-xl bg-white hover:shadow-xl transition-shadow duration-300'>
   {/* Header Section */}
   <div className='flex justify-between items-start mb-4'>
-    <img className='h-10 w-10 object-contain' src={assets.company_icon} alt="company icon" />
+    <img className='h-10 w-10 object-contain' src={job.companyId.image} alt="company icon" />
     <h4 className='font-semibold text-lg text-right text-gray-800 flex-1 ml-4'>{job.title}</h4>
   </div>
 

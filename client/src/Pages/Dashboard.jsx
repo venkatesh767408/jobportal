@@ -1,10 +1,26 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {NavLink, Outlet} from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
+import { Appcontext } from '../contexts/Appcontext';
+import {useEffect} from 'react'
 
 const Dashboard = () => {
     const navigate=useNavigate();
+    const {companyData,setCompanyData,setCompanyToken}=useContext(Appcontext)
+    //function to logout for company
+
+    const logout=()=>{
+      setCompanyToken(null);
+      localStorage.removeItem('companyToken');
+      setCompanyData(null);
+      navigate('/');
+    }
+    useEffect(()=>{
+      if(companyData){
+        navigate('/Dashboard/manage-jobs')
+    }
+},[companyData])
   return (
     <div className="min-h-screen">
     {/* Navbar for Recruiter Panel */}
@@ -17,27 +33,29 @@ const Dashboard = () => {
           src={assets.logo}
           alt="Logo" onClick={()=> navigate('/') }
         />
+        {companyData && 
+         <div className="flex items-center gap-3">
+         <p className="max-sm:hidden">Welcome, {companyData.name}</p>
+ 
+         {/* Company Profile + Dropdown */}
+         <div className="relative group">
+           <img
+             className="w-8 border rounded-full cursor-pointer"
+             src={companyData.image}
+             alt="Company Icon"
+           />
+ 
+           {/* Dropdown on hover */}
+           <div className="absolute hidden group-hover:block right-0 right-0 z-10 text-black rounded pt-12">
+             <ul className='list-none m-0 p-2 bg-white rounded-md border text-sm'>
+               <li onClick={logout} className='py-1 px-2 cursor-pointer pr-10'>Logout</li>
+             </ul>
+           </div>
+         </div>
+       </div>}
   
         {/* Right side */}
-        <div className="flex items-center gap-3">
-          <p className="max-sm:hidden">Welcome, Greatestack</p>
-  
-          {/* Company Profile + Dropdown */}
-          <div className="relative group">
-            <img
-              className="w-8 border rounded-full cursor-pointer"
-              src={assets.company_icon}
-              alt="Company Icon"
-            />
-  
-            {/* Dropdown on hover */}
-            <div className="absolute hidden group-hover:block right-0 right-0 z-10 text-black rounded pt-12">
-              <ul className='list-none m-0 p-2 bg-white rounded-md border text-sm'>
-                <li className='py-1 px-2 cursor-pointer pr-10'>Logout</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+       
   
       </div>
     </div>

@@ -1,31 +1,76 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Appcontext } from '../contexts/Appcontext';
 import Loading from '../contexts/Loading';
 import Navigation from '../Components/Navigation';
 import { assets } from '../assets/assets';
 import kconvert from 'k-convert';
 import moment from 'moment';
-import {useNavigate} from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import {useAuth} from '@clerk/clerk-react'
 
 const Applyjob = () => {
   const { id } = useParams();
-  const { jobs } = useContext(Appcontext);
+  const { jobs, userData, userApplications } = useContext(Appcontext);
   const [jobsdata, setJobsdata] = useState(null);
-  const navigate=useNavigate();
-
+  const navigate = useNavigate();
+   const {getToken}=useAuth();
   const fetchjobs = async () => {
-    const data = jobs.filter(job => job._id === id);
-    if (data.length !== 0) {
-      setJobsdata(data[0]);
+    try {
+      const { data } = await axios.get(`http://localhost:5000/api/jobs/${id}`);
+      if (data.success) {
+        setJobsdata(data.job);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
+  };
+ const applyhandler = async (jobId) => {
+  console.log(jobs)
+  console.log(userData)
+  try {
+   
+
+    if (!userData.resume) {
+      navigate('/applicationpage');
+      return toast.error("Please upload your resume to apply for the job");
+    }
+
+    const token = await getToken();
+
+    const { data } = await axios.post(
+      'http://localhost:5000/api/users/apply',
+       { jobId: jobsdata._id }, // ✅ correctly sending the jobId
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    if (data.success) {
+      toast.success("Applied successfully");
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error(error?.response?.data?.message || error.message);
   }
+};
+
 
   useEffect(() => {
-    if (true) {
-      fetchjobs();
+    fetchjobs();
+  }, [id]);
+  useEffect(() => {
+    if (!userData) {
+      toast.error("Please login to apply for the job");
     }
-  }, [id, jobs]);
+  }, [userData]);  // This will trigger when userData changes
+  
 
   return jobsdata ? (
     <>
@@ -61,7 +106,7 @@ const Applyjob = () => {
             </div>
           </div>
           <div className="flex flex-col items-start md:items-end gap-2 mt-4 md:mt-0">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+            <button onClick={() => applyhandler(jobsdata._id)} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
               Apply
             </button>
             <p className="text-gray-400 text-sm">{moment(jobsdata.data).fromNow()}</p>
@@ -72,15 +117,13 @@ const Applyjob = () => {
           <h2 className="text-xl font-semibold mb-4">Job Description</h2>
           <div className="prose max-w-full" dangerouslySetInnerHTML={{ __html: jobsdata.description }} />
           <div className="mt-4">
-  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-    Apply
-  </button>
-  <button onClick={()=>navigate('/')} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition ml-4">
-    Back
-  </button>
-</div>
-
-         
+            <button onClick={() => applyhandler(jobsdata._id)} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+              Apply
+            </button>
+            <button onClick={() => navigate('/')} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition ml-4">
+              Back
+            </button>
+          </div>
         </div>
       </div>
     </>

@@ -1,22 +1,73 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { assets } from '../assets/assets';
 import { Appcontext } from '../contexts/Appcontext';
+import axios from 'axios'
+import {useNavigate} from 'react-router-dom'
+import { toast } from 'react-toastify';
+
 
 const Recruiterlogin = () => {
+  const navigate=useNavigate();
   const [state, setState] = useState('login');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [logo, setLogo] = useState(null);
   const [isNextStep, setIsNextStep] = useState(false);
-  const { setShowrecruiterlogin } = useContext(Appcontext);
+  const { setShowrecruiterlogin,setCompanyToken,setCompanyData } = useContext(Appcontext);
 
-  const handleSubmit = (e) => {
+
+  const handleSubmit =async (e) => {
     e.preventDefault();
 
     if (state === 'signup' && !isNextStep) {
       setIsNextStep(true); // Move to logo upload step
       return;
+    }
+    try{
+           if(state=='login'){
+            const {data}=await axios.post('http://localhost:5000/api/company/login',{email,password})
+            if( data.success){
+              navigate('/Dashboard')
+               console.log(data);
+               localStorage.setItem('companyToken',data.token)
+               setCompanyData(data.company);
+               setCompanyToken(data.token);
+
+          
+               toast.success(data.message || 'Logged in successfully!');
+               
+
+               setShowrecruiterlogin(false);
+
+             
+            }else{
+              toast.error(data.message)
+            }
+
+           }else{
+              const formData=new FormData()
+              formData.append('name',name)
+              formData.append('password',password)
+              formData.append('email',email)
+              formData.append('image',logo)
+              const {data}=await axios.post('http://localhost:5000/api/company/register',formData)
+              if(data.success){
+                navigate('/Dashboard')
+                console.log(data);
+                console.log(data);
+               localStorage.setItem('companyToken',data.token)
+               setCompanyData(data.company);
+               setCompanyToken(data.token);
+               setShowrecruiterlogin(false);
+
+              }else{
+                console.log(data.message);
+                toast.error(data.message);
+              }
+           }
+    }catch(error){
+         toast.error(error.message);
     }
 
     // Final submission (signup or login)

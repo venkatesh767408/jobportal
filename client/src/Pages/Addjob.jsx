@@ -1,24 +1,69 @@
-import React from 'react'
-import {useState,useRef,useEffect} from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import Quill from 'quill';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { Appcontext } from '../contexts/Appcontext';
 import { JobCategories, JobLocations } from '../assets/assets';
+
 const Addjob = () => {
-    const [title,setTitle]=useState('');
-    const [location,setLocation]=useState('bangalore');
-    const [category,setCategory]=useState('programming');
-    const [level,setLevel]=useState('Beginner level');
-    const [salary,setsalary]=useState(0);
-    const editorRef=useRef(null);
-    const quillRef=useRef(null);
-    useEffect(()=>{
-        if(!quillRef.current && editorRef.current){
-            quillRef.current=new Quill(editorRef.current,{
-                theme:'snow'
-            })
+  const [title, setTitle] = useState('');
+  const [location, setLocation] = useState('bangalore');
+  const [category, setCategory] = useState('programming');
+  const [level, setLevel] = useState('Beginner level');
+  const [salary, setsalary] = useState(0);
+
+  const editorRef = useRef(null);
+  const quillRef = useRef(null);
+
+  const { companyToken } = useContext(Appcontext);
+
+  useEffect(() => {
+    if (!quillRef.current && editorRef.current) {
+      quillRef.current = new Quill(editorRef.current, {
+        theme: 'snow'
+      });
+    }
+  }, []);
+
+  const onsubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      const description = quillRef.current.root.innerHTML;
+
+      const { data } = await axios.post(
+        'http://localhost:5000/api/company/post-job',
+        {
+          title,
+          description,
+          location,
+          salary,
+          category,
+          level
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${companyToken}`
+          }
         }
-    })
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        setTitle('');
+        setsalary(0);
+        quillRef.current.root.innerHTML = "";
+      } else {
+        console.log(data.message);
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Something went wrong");
+    }
+  };
+
   return (
-    <form className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-6">
+    <form onSubmit={onsubmitHandler} className="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg space-y-6">
     <div>
       <label className="block text-lg font-semibold text-gray-800 mb-2">Job Title</label>
       <input

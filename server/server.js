@@ -4,20 +4,30 @@ import connectDB from './config/db.js'; // Import the DB connection function
 import dotenv from 'dotenv';
 import {clerkwebhooks} from './Controller/webhooks.js'
 const app = express();
+import companyRoutes from './Routes/companyRouter.js';
+import connectCloudinary from './config/cloudinary.js';
+import jobRoutes from './Routes/jobRoutes.js';
+import usersRoutes from './Routes/userRoutes.js'
+import {clerkMiddleware} from '@clerk/express'
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(clerkMiddleware());
 dotenv.config();
 // Routes
 app.get('/', (req, res) => {
   res.send("API working");
 });
-app.post('/webhooks',clerkwebhooks)
+app.post("/webhooks", express.text({ type: "*/*" }), clerkwebhooks);
+app.use('/api/company',companyRoutes);
+app.use('/api/jobs',jobRoutes);
+app.use('/api/users',usersRoutes)
 
 //database connection status
 
 await connectDB();
+await connectCloudinary();
 
 // Port
 const PORT = process.env.PORT || 5000;
