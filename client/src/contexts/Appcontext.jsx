@@ -25,7 +25,7 @@ export const Appcontextprovider=(props)=>{
             const {data}=await axios.get('http://localhost:5000/api/jobs')
             if(data.success){
               setJobs(data.jobs)
-              console.log(data.jobs);
+            
             }else{
               toast.error(data.message);
             }
