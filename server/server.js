@@ -20,9 +20,12 @@ app.get('/', (req, res) => {
   res.send("API working");
 });
 app.post("/webhooks", express.text({ type: "*/*" }), clerkwebhooks);
+<<<<<<< HEAD
 app.use('/api/company',companyRoutes);
 app.use('/api/jobs',jobRoutes);
 app.use('/api/users',usersRoutes)
+=======
+>>>>>>> a1edce70c7241271cee1e040c9d082f723873c3b
 
 //database connection status
 
