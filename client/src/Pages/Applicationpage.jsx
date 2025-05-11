@@ -40,7 +40,7 @@ const Applicationpage = () => {
       toast.error(data.message);
     }
   } catch (error) {
-    console.error(error);
+    
     toast.error(
       error?.response?.data?.message || error.message || 'Something went wrong'
     );
