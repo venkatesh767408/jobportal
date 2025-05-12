@@ -22,7 +22,7 @@ export const Appcontextprovider=(props)=>{
     const [jobs,setJobs]=useState([]);
     const fetchjobs=async ()=>{
           try{
-            const {data}=await axios.get('http://localhost:5000/api/jobs')
+            const {data}=await axios.get('https://jobportal-vert-sigma.vercel.app/api/jobs')
             if(data.success){
               setJobs(data.jobs)
             
@@ -46,7 +46,7 @@ export const Appcontextprovider=(props)=>{
           const token = companyToken; // Get the token from state or context
       
           // Make the API request with the Authorization header set correctly
-          const { data } = await axios.get('http://localhost:5000/api/company/getCompany', {
+          const { data } = await axios.get('https://jobportal-vert-sigma.vercel.app/api/company/getCompany', {
             headers: {
               Authorization: `Bearer ${token}`  // Use 'Authorization' header with 'Bearer <token>'
             }
@@ -68,7 +68,7 @@ export const Appcontextprovider=(props)=>{
       const fetchUserData=async ()=>{
           try{
                   const token=await getToken();
-                  const {data}=await axios.get('http://localhost:5000/api/users/user',{
+                  const {data}=await axios.get('https://jobportal-vert-sigma.vercel.app/api/users/user',{
                     headers:{Authorization :`Bearer ${token}`}
                   })
                   if(data.success){
@@ -85,7 +85,7 @@ export const Appcontextprovider=(props)=>{
     const fetchUserApplications=async ()=>{
       try{
         const token=await getToken();
-        const {data}=await axios.get('http://localhost:5000/api/users/applications',
+        const {data}=await axios.get('https://jobportal-vert-sigma.vercel.app/api/users/applications',
           {
             headers:{
               Authorization:`Bearer ${token}`
