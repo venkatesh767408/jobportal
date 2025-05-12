@@ -18,7 +18,7 @@ const Applyjob = () => {
    const {getToken}=useAuth();
   const fetchjobs = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:5000/api/jobs/${id}`);
+      const { data } = await axios.get(`https://jobportal-vert-sigma.vercel.app/api/jobs/${id}`);
       if (data.success) {
         setJobsdata(data.job);
       } else {
@@ -42,7 +42,7 @@ const Applyjob = () => {
     const token = await getToken();
 
     const { data } = await axios.post(
-      'http://localhost:5000/api/users/apply',
+      'https://jobportal-vert-sigma.vercel.app/api/users/apply',
        { jobId: jobsdata._id }, // ✅ correctly sending the jobId
       {
         headers: {
