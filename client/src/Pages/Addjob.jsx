@@ -31,7 +31,7 @@ const Addjob = () => {
       const description = quillRef.current.root.innerHTML;
 
       const { data } = await axios.post(
-        'http://localhost:5000/api/company/post-job',
+        'https://jobportal-vert-sigma.vercel.app/api/company/post-job',
         {
           title,
           description,
