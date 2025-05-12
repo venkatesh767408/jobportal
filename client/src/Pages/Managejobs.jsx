@@ -15,7 +15,7 @@ const ManageJobs = () => {
     //function to fetch company Job Application data
  const fetchCompanyJobs=async ()=>{
         try{
-          const {data}=await axios.get(`http://localhost:5000/api/company/list-jobs`,
+          const {data}=await axios.get(`https://jobportal-vert-sigma.vercel.app/api/company/list-jobs`,
             {headers:{
               'Authorization':`Bearer ${companyToken}`
             }}
@@ -33,7 +33,7 @@ const ManageJobs = () => {
     // change job visibility
   const changeJobVisibility=async (id)=>{
              try{
-              const {data}=await axios.put('http://localhost:5000/api/company/change-visibility',
+              const {data}=await axios.put('https://jobportal-vert-sigma.vercel.app/api/company/change-visibility',
                 {
                  id,
                 },{
