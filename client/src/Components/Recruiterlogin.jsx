@@ -26,7 +26,7 @@ const Recruiterlogin = () => {
     }
     try{
            if(state=='login'){
-            const {data}=await axios.post('http://localhost:5000/api/company/login',{email,password})
+            const {data}=await axios.post('https://jobportal-vert-sigma.vercel.app/api/company/login',{email,password})
             if( data.success){
               navigate('/Dashboard')
                
@@ -51,7 +51,7 @@ const Recruiterlogin = () => {
               formData.append('password',password)
               formData.append('email',email)
               formData.append('image',logo)
-              const {data}=await axios.post('http://localhost:5000/api/company/register',formData)
+              const {data}=await axios.post('https://jobportal-vert-sigma.vercel.app/api/company/register',formData)
               if(data.success){
                 navigate('/Dashboard')
                 
