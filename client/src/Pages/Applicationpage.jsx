@@ -24,7 +24,7 @@ const Applicationpage = () => {
     const token = await getToken();
 
     const { data } = await axios.post(
-      'http://localhost:5000/api/users/update-resume',
+      'https://jobportal-vert-sigma.vercel.app/api/users/update-resume',
       formData,
       {
         headers: {
