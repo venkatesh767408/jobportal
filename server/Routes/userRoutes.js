@@ -14,6 +14,6 @@ router.post('/apply',applyforJob)
 router.get('/applications',getUserjobApplications)
 
 // update user profile
- router.post('/update-resume',upload.single('resume'),updateuserResume)
+ router.post('/update-resume',upload.single('file'),updateuserResume)
 
  export default router
