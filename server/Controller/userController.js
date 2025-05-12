@@ -4,6 +4,7 @@ import User from "../models/User.js"
 import Job from "../models/job.js"
 import {v2 as cloudinary} from "cloudinary"
 import mongoose from 'mongoose';
+import { Readable } from 'stream';
 //get user data
 
 export const getUserData = async (req,res)=>{
@@ -74,7 +75,7 @@ export const getUserjobApplications=async (req,res)=>{
 
 }
 //update user profile(resume)
-export const updateuserResume= async (req,res)=>{
+ /*export const updateuserResume= async (req,res)=>{
         try{
             const userId=req.auth.userId
             const resumeFile=req.file
@@ -89,3 +90,27 @@ export const updateuserResume= async (req,res)=>{
             res.json({success:false,message:error.message})
         }
 }
+*/
+export const updateuserResume = async (req, res) => {
+  try {
+    const userId = req.auth.userId; // Assuming you have authentication middleware
+    const resumeFile = req.file; // This will contain the file from the memory storage
+
+    // Fetch user data from database
+    const userData = await User.findById(userId);
+
+    if (resumeFile) {
+      // Upload resume file to Cloudinary and get the file URL
+      const uploadResult = await streamUpload(resumeFile.buffer);
+      userData.resume = uploadResult.secure_url; // Store the URL of the uploaded resume
+    }
+
+    // Save the user data with the updated resume URL
+    await userData.save();
+
+    return res.json({ success: true, message: 'Resume Updated' });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
